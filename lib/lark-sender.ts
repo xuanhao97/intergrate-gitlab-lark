@@ -15,20 +15,26 @@ export async function sendToLark(req: NextRequest,message: any): Promise<LarkRes
     if (!webhookUrl) {
       throw new Error('LARK_WEBHOOK_URL environment variable is not set')
     }
+
     
     // Add timestamp for webhook verification if secret is provided
     if (webhookSecret) {
+      
       const timestamp = Math.floor(Date.now() / 1000).toString()
       const sign = generateLarkSignature(timestamp, webhookSecret)
+      
+      console.log("Webhook Secret: ", {webhookSecret,sign,timestamp});
       
       // Add signature to headers
       const headers = {
         'Content-Type': 'application/json',
-        'X-Lark-Request-Timestamp': timestamp,
-        'X-Lark-Signature': sign
       }
       
-      const response = await axios.post(webhookUrl, message, { headers })
+      const response = await axios.post(webhookUrl, {
+        ...message,
+        sign,
+        timestamp,
+      }, { headers })
       
       console.log("Susses sending to Lark ", response.status, response.data);
       
