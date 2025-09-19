@@ -133,8 +133,17 @@ function generateTagPushMessage(event: GitLabEvent, titlePrefix: string, color: 
   }
 }
 
+const mappingUserGitlab : Record<string,string> = {
+  "huyqt" : "DEV-119",
+  "gorst" : "9bda5dfd",
+  "namvn" : "2ec21g59",
+  "chile" : "34fba4bb",
+  "ducnvv" : "5ed3g281"
+}
+
 function generateTagUserName (usernames : string[]) {
-  return usernames.map(username => `<at id=\"${username}\">${username}</at> `).join(', ')
+  const mappedUsernames = usernames.map(username => mappingUserGitlab[username] || username)
+  return usernames.map(username => `<at id=\"${mappedUsernames}\">${mappedUsernames}</at> `).join(', ')
 }
 
 function generatePushMessage(event: GitLabEvent, titlePrefix: string, color: string) {
