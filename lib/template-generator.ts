@@ -225,7 +225,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
     {
       tag: 'div',
       text: {
-        content: `**Repository:** ${event.project.name}(${event.project.web_url})`,
+        content: `**Repository:** [${event.project.name}](${event.project.web_url})`,
         tag: 'lark_md'
       }
     },
