@@ -1,0 +1,66 @@
+import axios from 'axios'
+import { NextRequest } from 'next/server'
+
+interface LarkResponse {
+  success: boolean
+  messageId?: string
+  error?: string
+}
+
+export async function sendToLark(req: NextRequest,message: any): Promise<LarkResponse> {
+  const webhookUrl = req.headers.get('X-Lark-Url')
+  const webhookSecret = req.headers.get('X-Lark-Secret')
+  
+  try {
+    if (!webhookUrl) {
+      throw new Error('LARK_WEBHOOK_URL environment variable is not set')
+    }
+    
+    // Add timestamp for webhook verification if secret is provided
+    if (webhookSecret) {
+      const timestamp = Math.floor(Date.now() / 1000).toString()
+      const sign = generateLarkSignature(timestamp, webhookSecret)
+      
+      // Add signature to headers
+      const headers = {
+        'Content-Type': 'application/json',
+        'X-Lark-Request-Timestamp': timestamp,
+        'X-Lark-Signature': sign
+      }
+      
+      const response = await axios.post(webhookUrl, message, { headers })
+      
+      return {
+        success: response.status === 200,
+        messageId: response.data?.code === 0 ? response.data?.data?.message_id : undefined,
+        error: response.data?.code !== 0 ? response.data?.msg : undefined
+      }
+    } else {
+      // Send without signature verification
+      const response = await axios.post(webhookUrl, message, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return {
+        success: response.status === 200,
+        messageId: response.data?.code === 0 ? response.data?.data?.message_id : undefined,
+        error: response.data?.code !== 0 ? response.data?.msg : undefined
+      }
+    }
+    
+  } catch (error) {
+    console.error('Error sending to Lark:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    }
+  }
+}
+
+function generateLarkSignature(timestamp: string, secret: string): string {
+  const crypto = require('crypto')
+  const stringToSign = timestamp + secret
+  return crypto.createHmac('sha256', secret).update(stringToSign).digest('base64')
+}
