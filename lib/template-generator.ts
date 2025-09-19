@@ -249,11 +249,20 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
     })
   }
    
-  // source -> target
+  // source 
   elements.push({
     tag: 'div',
     text: {
-      content: `**Source:** ${mr.source_branch} → **Target:** ${mr.target_branch}`,
+      content: `**Source:** ${mr.source_branch}`,
+      tag: 'lark_md'
+    }
+  })
+
+  // target
+  elements.push({
+    tag: 'div',
+    text: {
+      content: `**Target:** ${mr.target_branch}`,
       tag: 'lark_md'
     }
   })
