@@ -283,7 +283,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
       header: {
         template: color,
         title: {
-          content: `${actionEmoji} [${uppercaseFirstLetter(mr.state)}] Merge Request`,
+          content: `${actionEmoji} [${event.project.name}](${event.project.web_url}) Merge Request ${uppercaseFirstLetter(mr.state)}`,
           tag: 'plain_text'
         }
       },
