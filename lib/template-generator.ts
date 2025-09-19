@@ -134,7 +134,7 @@ function generateTagPushMessage(event: GitLabEvent, titlePrefix: string, color: 
 }
 
 function generateTagUserName (usernames : string[]) {
-  return usernames.map(username => `<at id=\"{{${username}}}\"></at>`).join(', ')
+  return usernames.map(username => `<at id=\"{{${username}}}\"></at> `).join(', ')
 }
 
 function generatePushMessage(event: GitLabEvent, titlePrefix: string, color: string) {
@@ -213,6 +213,9 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
   
   const action = mr.action || 'opened'
   const actionEmoji = getActionEmoji(action)
+
+  console.log("Author: ",event.user.username);
+  
 
   const elements = [
     {

@@ -14,8 +14,6 @@ export async function POST(request: NextRequest) {
     // Generate Lark message template
     const larkMessage = generateLarkMessage(gitlabEvent, eventType)
 
-    console.log("Lark Messages: ", larkMessage)
-    
     if (!larkMessage) {
       return NextResponse.json({ error: 'Unsupported event type' }, { status: 400 })
     }
@@ -25,14 +23,14 @@ export async function POST(request: NextRequest) {
     
     if (!larkResponse.success) {
       console.log('Failed to send to Lark:', larkResponse.error)
-      return NextResponse.json({ error: 'Failed to send to Lark' }, { status: 500 })
+      return NextResponse.json({ error: larkResponse.error }, { status: 500 })
     }
     
     return NextResponse.json({ 
       success: true, 
-      message: 'Webhook processed successfully',
+      message: larkResponse.message,
       eventType,
-      larkMessageId: larkResponse.messageId
+      larkMessageId: larkResponse.message
     })
     
   } catch (error) {

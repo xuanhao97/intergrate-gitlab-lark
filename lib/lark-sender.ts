@@ -5,6 +5,7 @@ interface LarkResponse {
   success: boolean
   messageId?: string
   error?: string
+  message?: string
 }
 
 export async function sendToLark(req: NextRequest,message: any): Promise<LarkResponse> {
@@ -41,7 +42,8 @@ export async function sendToLark(req: NextRequest,message: any): Promise<LarkRes
       return {
         success: response.status === 200,
         messageId: response.data?.code === 0 ? response.data?.data?.message_id : undefined,
-        error: response.data?.code !== 0 ? response.data?.msg : undefined
+        error: response.data?.code !== 0 ? response.data?.msg : undefined,
+        message: response.data?.message
       }
     } else {
       // Send without signature verification
@@ -57,7 +59,8 @@ export async function sendToLark(req: NextRequest,message: any): Promise<LarkRes
       return {
         success: response.status === 200,
         messageId: response.data?.code === 0 ? response.data?.data?.message_id : undefined,
-        error: response.data?.code !== 0 ? response.data?.msg : undefined
+        error: response.data?.code !== 0 ? response.data?.msg : undefined,
+        message: response.data?.message
       }
     }
     
