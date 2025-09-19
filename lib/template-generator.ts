@@ -253,7 +253,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
   elements.push({
     tag: 'div',
     text: {
-      content: `**Source:** ${mr.source_branch}`,
+      content: `**Source:** [${mr.source_branch}](${event.project.web_url}/tree/${mr.source_branch})`,
       tag: 'lark_md'
     }
   })
@@ -262,7 +262,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
   elements.push({
     tag: 'div',
     text: {
-      content: `**Target:** ${mr.target_branch}`,
+      content: `**Target:** [${mr.target_branch}](${event.project.web_url}/tree/${mr.target_branch})`,
       tag: 'lark_md'
     }
   })
@@ -292,7 +292,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
       header: {
         template: color,
         title: {
-          content: `${actionEmoji} [${event.project.name}] Merge Request ${uppercaseFirstLetter(mr.state)}`,
+          content: `${actionEmoji} [${event.project.name}][${mr.state.toUpperCase()}] Merge Request`,
           tag: 'plain_text'
         }
       },
