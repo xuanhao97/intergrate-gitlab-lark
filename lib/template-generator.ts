@@ -140,6 +140,54 @@ function generateTagUserName (usernames : string[]) {
 function generatePushMessage(event: GitLabEvent, titlePrefix: string, color: string) {
   const commits = event.commits || []
   const commitCount = commits.length
+
+  const elements  = [
+    {
+      tag: 'div',
+      text: {
+        content: `**Repository:** ${event.project.name}\n**Branch:** ${event.object_attributes?.source_branch || 'main'}\n**Commits:** ${commitCount}`,
+        tag: 'lark_md'
+      }
+    },
+    {
+      tag: 'div',
+      text: {
+        content: `**Author:** ${generateTagUserName([event.user.username])}`,
+        tag: 'lark_md'
+      }
+    },
+    ...commits.slice(0, 3).map(commit => ({
+      tag: 'div',
+      text: {
+        content: `• ${commit.message.substring(0, 100)}${commit.message.length > 100 ? '...' : ''}`,
+        tag: 'lark_md'
+      }
+    })),
+    {
+      tag: 'action',
+      actions: [
+        {
+          tag: 'button',
+          text: {
+            content: 'View Repository',
+            tag: 'plain_text'
+          },
+          url: event.project.web_url,
+          type: 'primary'
+        }
+      ]
+    }
+  ]
+
+  if (event.reviewers?.length) {
+    elements.push({
+      tag: 'div',
+      text: {
+        content: `**Reviewers:** ${event.reviewers ? generateTagUserName(event.reviewers.map(reviewer => reviewer.username)) : ""}`,
+        tag: 'lark_md'
+      }
+    })
+  }
   
   return {
     msg_type: 'interactive',
@@ -154,50 +202,7 @@ function generatePushMessage(event: GitLabEvent, titlePrefix: string, color: str
           tag: 'plain_text'
         }
       },
-      elements: [
-        {
-          tag: 'div',
-          text: {
-            content: `**Repository:** ${event.project.name}\n**Branch:** ${event.object_attributes?.source_branch || 'main'}\n**Commits:** ${commitCount}`,
-            tag: 'lark_md'
-          }
-        },
-        {
-          tag: 'div',
-          text: {
-            content: `**Author:** ${generateTagUserName([event.user.username])}`,
-            tag: 'lark_md'
-          }
-        },
-        ...(event.reviewers ? [{
-          tag: 'div',
-          text: {
-            content: `**Reviewers:** ${generateTagUserName(event.reviewers.map(reviewer => reviewer.username))}`,
-            tag: 'lark_md'
-          }
-        }] : []),
-        ...commits.slice(0, 3).map(commit => ({
-          tag: 'div',
-          text: {
-            content: `• ${commit.message.substring(0, 100)}${commit.message.length > 100 ? '...' : ''}`,
-            tag: 'lark_md'
-          }
-        })),
-        {
-          tag: 'action',
-          actions: [
-            {
-              tag: 'button',
-              text: {
-                content: 'View Repository',
-                tag: 'plain_text'
-              },
-              url: event.project.web_url,
-              type: 'primary'
-            }
-          ]
-        }
-      ]
+      elements
     }
   }
 }
@@ -208,6 +213,54 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
   
   const action = mr.action || 'opened'
   const actionEmoji = getActionEmoji(action)
+
+  const elements = [
+    {
+      tag: 'div',
+      text: {
+        content: `**Title:** ${mr.title}\n**Repository:** ${event.project.name}\n**Author:** ${generateTagUserName([event.user.username])}`,
+        tag: 'lark_md'
+      }
+    },
+    {
+      tag: 'div',
+      text: {
+        content: `**Source:** ${mr.source_branch} → **Target:** ${mr.target_branch}\n**State:** ${mr.state}`,
+        tag: 'lark_md'
+      }
+    },
+    // ...(mr.description ? [{
+    //   tag: 'div',
+    //   text: {
+    //     content: `**Description:**\n${mr.description.substring(0, 200)}${mr.description.length > 200 ? '...' : ''}`,
+    //     tag: 'lark_md'
+    //   }
+    // }] : []),
+    {
+      tag: 'action',
+      actions: [
+        {
+          tag: 'button',
+          text: {
+            content: 'View Merge Request',
+            tag: 'plain_text'
+          },
+          url: mr.url,
+          type: 'primary'
+        }
+      ]
+    }
+  ]
+
+  if ((action === "opened" || action === "reopened") && event.reviewers ) {
+    elements.push({
+      tag: 'div',
+      text: {
+        content: `**Reviewers:** ${generateTagUserName(event.reviewers.map(reviewer => reviewer.username))}`,
+        tag: 'lark_md'
+      }
+    })
+  }
   
   return {
     msg_type: 'interactive',
@@ -222,50 +275,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
           tag: 'plain_text'
         }
       },
-      elements: [
-        {
-          tag: 'div',
-          text: {
-            content: `**Title:** ${mr.title}\n**Repository:** ${event.project.name}\n**Author:** ${generateTagUserName([event.user.username])}`,
-            tag: 'lark_md'
-          }
-        },
-        (action === "opened" || action === "reopened") && event.reviewers ? [{
-          tag: 'div',
-          text: {
-            content: `**Reviewers:** ${generateTagUserName(event.reviewers.map(reviewer => reviewer.username))}`,
-            tag: 'lark_md'
-          }
-        }] : [],
-        {
-          tag: 'div',
-          text: {
-            content: `**Source:** ${mr.source_branch} → **Target:** ${mr.target_branch}\n**State:** ${mr.state}`,
-            tag: 'lark_md'
-          }
-        },
-        ...(mr.description ? [{
-          tag: 'div',
-          text: {
-            content: `**Description:**\n${mr.description.substring(0, 200)}${mr.description.length > 200 ? '...' : ''}`,
-            tag: 'lark_md'
-          }
-        }] : []),
-        {
-          tag: 'action',
-          actions: [
-            {
-              tag: 'button',
-              text: {
-                content: 'View Merge Request',
-                tag: 'plain_text'
-              },
-              url: mr.url,
-              type: 'primary'
-            }
-          ]
-        }
-      ]
+      elements
     }
   }
 }
