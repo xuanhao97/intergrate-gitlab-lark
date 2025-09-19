@@ -19,7 +19,7 @@ interface GitlabTagEvent  {
   project_id: number
 }
 
-interface GitLabEvent extends Partial<GitlabTagEvent> {
+export interface GitLabEvent extends Partial<GitlabTagEvent> {
   object_kind: string
   project: {
     name: string
