@@ -217,7 +217,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
   console.log("Author: ",event.user.username);
   
 
-  const elements = [
+  const elements : any[] = [
     {
       tag: 'div',
       text: {
@@ -225,34 +225,6 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
         tag: 'lark_md'
       }
     },
-    {
-      tag: 'div',
-      text: {
-        content: `**Source:** ${mr.source_branch} → **Target:** ${mr.target_branch}\n**State:** ${mr.state}`,
-        tag: 'lark_md'
-      }
-    },
-    // ...(mr.description ? [{
-    //   tag: 'div',
-    //   text: {
-    //     content: `**Description:**\n${mr.description.substring(0, 200)}${mr.description.length > 200 ? '...' : ''}`,
-    //     tag: 'lark_md'
-    //   }
-    // }] : []),
-    {
-      tag: 'action',
-      actions: [
-        {
-          tag: 'button',
-          text: {
-            content: 'View Merge Request',
-            tag: 'plain_text'
-          },
-          url: mr.url,
-          type: 'primary'
-        }
-      ]
-    }
   ]
 
   if ((action === "opened" || action === "reopened") && event.reviewers ) {
@@ -264,6 +236,29 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
       }
     })
   }
+
+  elements.push({
+    tag: 'div',
+    text: {
+      content: `**Source:** ${mr.source_branch} → **Target:** ${mr.target_branch}\n**State:** ${mr.state}`,
+      tag: 'lark_md'
+    }
+  })
+
+  elements.push({
+    tag: 'action',
+    actions: [
+      {
+        tag: 'button',
+        text: {
+          content: 'View Merge Request',
+          tag: 'plain_text'
+        },
+        url: mr.url,
+        type: 'primary'
+      }
+    ]
+  })
   
   return {
     msg_type: 'interactive',
