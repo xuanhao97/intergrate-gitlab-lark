@@ -227,7 +227,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
     },
   ]
 
-  if ((action === "opened" || action === "reopened") && event.reviewers ) {
+  if (event.reviewers) {
     elements.push({
       tag: 'div',
       text: {
@@ -269,7 +269,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
       header: {
         template: color,
         title: {
-          content: `${titlePrefix}: ${actionEmoji} Merge Request ${action}`,
+          content: `${titlePrefix}: ${actionEmoji} Merge Request ${mr.state.toUpperCase()}`,
           tag: 'plain_text'
         }
       },
