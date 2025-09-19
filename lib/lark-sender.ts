@@ -10,7 +10,7 @@ interface LarkResponse {
 export async function sendToLark(req: NextRequest,message: any): Promise<LarkResponse> {
   const webhookUrl = req.headers.get('X-Lark-Url')
   const webhookSecret = req.headers.get('X-Lark-Secret')
-  
+
   try {
     if (!webhookUrl) {
       throw new Error('LARK_WEBHOOK_URL environment variable is not set')
@@ -30,6 +30,8 @@ export async function sendToLark(req: NextRequest,message: any): Promise<LarkRes
       
       const response = await axios.post(webhookUrl, message, { headers })
       
+      console.log("Susses sending to Lark ", response.status, response.data);
+      
       return {
         success: response.status === 200,
         messageId: response.data?.code === 0 ? response.data?.data?.message_id : undefined,
@@ -42,6 +44,9 @@ export async function sendToLark(req: NextRequest,message: any): Promise<LarkRes
           'Content-Type': 'application/json'
         }
       })
+
+      console.log("Susses sending to Lark ", response.status, response.data);
+      
       
       return {
         success: response.status === 200,
