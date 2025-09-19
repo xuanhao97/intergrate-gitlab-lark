@@ -143,7 +143,8 @@ const mappingUserGitlab : Record<string,string> = {
 
 function generateTagUserName (usernames : string[]) {
   const mappedUsernames = usernames.map(username => mappingUserGitlab[username] || username)
-  return usernames.map(username => `<at id=\"${mappedUsernames}\">${mappedUsernames}</at> `).join(', ')
+  // return usernames.map(username => `<at id=\"${mappedUsernames}\">${mappedUsernames}</at> `).join(', ')
+  return usernames.map(username => `@${mappedUsernames}`).join(', ')
 }
 
 function generatePushMessage(event: GitLabEvent, titlePrefix: string, color: string) {
