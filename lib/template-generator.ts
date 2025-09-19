@@ -134,7 +134,7 @@ function generateTagPushMessage(event: GitLabEvent, titlePrefix: string, color: 
 }
 
 function generateTagUserName (usernames : string[]) {
-  return usernames.map(username => `<at id=\"${username}\"></at> `).join(', ')
+  return usernames.map(username => `<at id=\"${username}\">${username}</at> `).join(', ')
 }
 
 function generatePushMessage(event: GitLabEvent, titlePrefix: string, color: string) {
@@ -214,19 +214,31 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
   const action = mr.action || 'opened'
   const actionEmoji = getActionEmoji(action)
 
-  console.log("Author: ",event.user.username);
-  
-
   const elements : any[] = [
     {
       tag: 'div',
       text: {
-        content: `**Title:** ${mr.title}\n**Repository:** ${event.project.name}\n**Author:** ${generateTagUserName([event.user.username])}`,
+        content: `**Title:** ${mr.title}`,
         tag: 'lark_md'
       }
     },
+    {
+      tag: 'div',
+      text: {
+        content: `**Repository:** ${event.project.name}`,
+        tag: 'lark_md'
+      }
+    },
+    {
+      tag: 'div',
+      text: {
+        content: `**Author:** ${generateTagUserName([event.user.username])}`,
+        tag: 'lark_md'
+      }
+    }
   ]
 
+  // reviewers
   if (event.reviewers) {
     elements.push({
       tag: 'div',
@@ -236,15 +248,17 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
       }
     })
   }
-
+   
+  // source -> target
   elements.push({
     tag: 'div',
     text: {
-      content: `**Source:** ${mr.source_branch} → **Target:** ${mr.target_branch}\n**State:** ${mr.state}`,
+      content: `**Source:** ${mr.source_branch} → **Target:** ${mr.target_branch}`,
       tag: 'lark_md'
     }
   })
 
+  // action
   elements.push({
     tag: 'action',
     actions: [
@@ -269,7 +283,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
       header: {
         template: color,
         title: {
-          content: `${titlePrefix}: ${actionEmoji} Merge Request ${mr.state.toUpperCase()}`,
+          content: `${actionEmoji} [${uppercaseFirstLetter(mr.state)}] Merge Request`,
           tag: 'plain_text'
         }
       },
@@ -504,4 +518,8 @@ function getPipelineColor(status: string): string {
     'skipped': 'grey'
   }
   return colorMap[status] || 'blue'
+}
+
+function uppercaseFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
