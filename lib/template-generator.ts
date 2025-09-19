@@ -225,7 +225,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
     {
       tag: 'div',
       text: {
-        content: `**Repository:** ${event.project.name}`,
+        content: `**Repository:** ${event.project.name}(${event.project.web_url})`,
         tag: 'lark_md'
       }
     },
@@ -283,7 +283,7 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
       header: {
         template: color,
         title: {
-          content: `${actionEmoji} [${event.project.name}](${event.project.web_url}) Merge Request ${uppercaseFirstLetter(mr.state)}`,
+          content: `${actionEmoji} [${event.project.name}] Merge Request ${uppercaseFirstLetter(mr.state)}`,
           tag: 'plain_text'
         }
       },
