@@ -69,14 +69,14 @@ export function generateLarkMessage(event: GitLabEvent, eventType: string | null
   const defaultColor = 'blue'
   
   switch (eventType) {
-    case 'Push Hook':
-      return generatePushMessage(event, titlePrefix, defaultColor)
+    // case 'Push Hook':
+    //   return generatePushMessage(event, titlePrefix, defaultColor)
     
     case 'Merge Request Hook':
       return generateMergeRequestMessage(event, titlePrefix, defaultColor)
 
-    case 'Tag Push Hook' : 
-      return generateTagPushMessage(event, titlePrefix, defaultColor)
+    // case 'Tag Push Hook' : 
+    //   return generateTagPushMessage(event, titlePrefix, defaultColor)
     
     // case 'Issue Hook':
     //   return generateIssueMessage(event, titlePrefix, defaultColor)
