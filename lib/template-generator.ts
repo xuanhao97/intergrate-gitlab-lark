@@ -140,7 +140,7 @@ const mappingUserGitlab : Record<string,string> = {
   "2ec21g59" : "Nam Vo",
   "chile" : "Chi",
   "ducnvv" : "Duc",
-  "DEV_094" : "Hao Pham",
+  "DEV-094" : "Hao Pham",
   "DEV-047" : "Viet",
   "DEV-048" : "Linh",
   "DEV-025" : "Bao",
