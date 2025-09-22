@@ -134,11 +134,23 @@ function generateTagPushMessage(event: GitLabEvent, titlePrefix: string, color: 
 }
 
 const mappingUserGitlab : Record<string,string> = {
-  "huyqt" : "DEV-119",
-  "gorst" : "9bda5dfd",
-  "namvn" : "2ec21g59",
-  "chile" : "34fba4bb",
-  "ducnvv" : "5ed3g281"
+  "huyqt" : "Huy",
+  "gorst" : "An",
+  "namvn" : "Nam Vo",
+  "2ec21g59" : "Nam Vo",
+  "chile" : "Chi",
+  "ducnvv" : "Duc",
+  "DEV_094" : "Hao Pham",
+  "DEV-047" : "Viet",
+  "DEV-048" : "Linh",
+  "DEV-025" : "Bao",
+  "bb9g23b1" : "Phuong Nam",
+  "2e47a1da" : "Nhacl",
+  "DEV-093" : "Hoang",
+  "6eea99b4" : "Viet Quang",
+  "DEV-092": "Tin",
+  "cb448g77": "Thang",
+  "f2cd3a57": "Tuan Huynh (FE)"
 }
 
 function generateTagUserName (usernames : string[]) {
