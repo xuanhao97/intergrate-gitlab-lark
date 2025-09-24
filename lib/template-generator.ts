@@ -22,6 +22,7 @@ interface GitlabTagEvent  {
 export interface GitLabEvent extends Partial<GitlabTagEvent> {
   object_kind: string
   project: {
+    id: number
     name: string
     web_url: string
     namespace: string
@@ -185,6 +186,13 @@ function generatePushMessage(event: GitLabEvent, titlePrefix: string, color: str
         tag: 'lark_md'
       }
     })),
+    {
+      tag: 'div',
+      text: {
+        content: `**MR ID:** ${event.project.id}`,
+        tag: 'lark_md'
+      }
+    },
     {
       tag: 'action',
       actions: [
