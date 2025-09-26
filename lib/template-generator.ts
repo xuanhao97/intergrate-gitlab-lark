@@ -297,6 +297,15 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
     }
   })
 
+  elements.push({
+    tag: 'div',
+    text: {
+      content: `**MR ID:** ${event.project.id}`,
+      tag: 'lark_md'
+    }
+  })
+  
+
   // action
   elements.push({
     tag: 'action',
@@ -312,7 +321,8 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
       }
     ]
   })
-  
+
+
   return {
     msg_type: 'interactive',
     card: {
