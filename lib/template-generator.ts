@@ -154,11 +154,14 @@ const mappingUserGitlab : Record<string,string> = {
   "f2cd3a57": "Tuan Huynh (FE)"
 }
 
+const gitUrl = "https://git.arobid.site"
+
 function generateTagUserName (usernames : string[]) {
   const mappedUsernames = usernames.map(username => mappingUserGitlab[username] || username)
   // return usernames.map(username => `<at id=\"${mappedUsernames}\">${mappedUsernames}</at> `).join(', ')
-  return usernames.map(username => `@${mappedUsernames}`).join(', ')
+  return usernames.map(username => `[@${mappedUsernames}](${gitUrl}/${username})`).join(', ')
 }
+
 
 function generatePushMessage(event: GitLabEvent, titlePrefix: string, color: string) {
   const commits = event.commits || []
