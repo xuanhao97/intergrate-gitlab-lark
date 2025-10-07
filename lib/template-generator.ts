@@ -296,10 +296,11 @@ function generateMergeRequestMessage(event: GitLabEvent, titlePrefix: string, co
       tag: 'lark_md'
     }
   })
+
   elements.push({
     tag: 'div',
     text: {
-      content: `**MR ID:** ${mr.iid}`,
+      content: `**MR ID:** [${mr.iid}](${mr.url})`,
       tag: 'lark_md'
     }
   })
