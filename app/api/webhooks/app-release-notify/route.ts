@@ -65,6 +65,39 @@ export async function POST(request: NextRequest) {
 }
 
 function buildThirdPartyCardMessage(data: Required<NonNullable<ThirdPartyPayload['data']>>) {
+  const elements = [
+    {
+      tag: 'div',
+      text: {
+        tag: 'lark_md',
+        content:
+          `**Application:** ${data.app_name}\n` +
+          `**Environment:** ${data.enviroment}\n` +
+          `**Platform:** ${data.platform}\n` +
+          `**Version:** ${data.version}\n` +
+          `**Commit:** ${data.commit}\n` +
+          isUrlValid(data.url) ? `**URL:** ${data.url}` : ''
+      }
+    }
+  ] as any[]
+
+  if (isUrlValid(data.url)) {
+    elements.push({
+      tag: 'action',
+      actions: [
+        {
+          tag: 'button',
+          text: {
+            tag: 'plain_text',
+            content: 'Go to Release'
+          },
+          type: 'primary',
+          url: data.url
+        }
+      ]
+    })
+  }
+
   return {
     msg_type: 'interactive',
     card: {
@@ -78,35 +111,7 @@ function buildThirdPartyCardMessage(data: Required<NonNullable<ThirdPartyPayload
           content: `[${data.platform?.toUpperCase()}][${data.enviroment?.toUpperCase()}] ${data.app_name}`
         }
       },
-      elements: [
-        {
-          tag: 'div',
-          text: {
-            tag: 'lark_md',
-            content:
-              `**Application:** ${data.app_name}\n` +
-              `**Environment:** ${data.enviroment}\n` +
-              `**Platform:** ${data.platform}\n` +
-              `**Version:** ${data.version}\n` +
-              `**Commit:** ${data.commit}\n` +
-              `**URL:** ${data.url}`
-          }
-        },
-        isUrlValid(data.url) && {
-          tag: 'action',
-          actions: [
-            {
-              tag: 'button',
-              text: {
-                tag: 'plain_text',
-                content: 'Go to Release'
-              },
-              type: 'primary',
-              url: data.url
-            }
-          ]
-        }
-      ]
+      elements
     }
   }
 }
