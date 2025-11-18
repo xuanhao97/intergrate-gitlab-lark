@@ -75,7 +75,7 @@ function buildThirdPartyCardMessage(data: Required<NonNullable<ThirdPartyPayload
         template: 'green',
         title: {
           tag: 'plain_text',
-          content: `[${data.platform}] ${data.app_name}`
+          content: `[${data.platform?.toUpperCase()}] ${data.app_name}`
         }
       },
       elements: [
@@ -99,7 +99,7 @@ function buildThirdPartyCardMessage(data: Required<NonNullable<ThirdPartyPayload
               tag: 'button',
               text: {
                 tag: 'plain_text',
-                content: 'View Dashboard'
+                content: 'Go to Release'
               },
               type: 'primary',
               url: data.url
