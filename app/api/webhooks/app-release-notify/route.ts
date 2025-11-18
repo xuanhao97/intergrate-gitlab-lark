@@ -7,6 +7,8 @@ type ThirdPartyPayload = {
     app_name?: string
     enviroment?: string
     platform?: string
+    commit?:string
+    version?:string
   }
 }
 
@@ -41,7 +43,9 @@ export async function POST(request: NextRequest) {
       url: data.url!.trim(),
       app_name: data.app_name!.trim(),
       enviroment: data.enviroment!.trim(),
-      platform: data.platform!.trim()
+      platform: data.platform!.trim(),
+      version: data.version!.trim(),
+      commit: data.commit!.trim()
     })
 
     const larkResponse = await sendToLark(request, larkMessage)
@@ -83,6 +87,8 @@ function buildThirdPartyCardMessage(data: Required<NonNullable<ThirdPartyPayload
               `**Application:** ${data.app_name}\n` +
               `**Environment:** ${data.enviroment}\n` +
               `**Platform:** ${data.platform}\n` +
+              `**Version:** ${data.version}\n` +
+              `**Commit:** ${data.commit}\n` +
               `**URL:** ${data.url}`
           }
         },
