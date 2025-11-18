@@ -75,7 +75,7 @@ function buildThirdPartyCardMessage(data: Required<NonNullable<ThirdPartyPayload
         template: 'green',
         title: {
           tag: 'plain_text',
-          content: `[${data.platform?.toUpperCase()}] ${data.app_name}`
+          content: `[${data.platform?.toUpperCase()}][${data.enviroment?.toUpperCase()}] ${data.app_name}`
         }
       },
       elements: [
@@ -92,7 +92,7 @@ function buildThirdPartyCardMessage(data: Required<NonNullable<ThirdPartyPayload
               `**URL:** ${data.url}`
           }
         },
-        {
+        isUrlValid(data.url) && {
           tag: 'action',
           actions: [
             {
@@ -111,3 +111,11 @@ function buildThirdPartyCardMessage(data: Required<NonNullable<ThirdPartyPayload
   }
 }
 
+const isUrlValid = (url: string) => {
+  try {
+    new URL(url)
+    return true
+  } catch (error) {
+    return false
+  }
+}
