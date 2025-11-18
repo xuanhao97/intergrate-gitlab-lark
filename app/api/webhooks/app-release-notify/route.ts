@@ -82,7 +82,7 @@ function buildThirdPartyCardMessage(data: Required<NonNullable<ThirdPartyPayload
             content:
               `**Application:** ${data.app_name}\n` +
               `**Environment:** ${data.enviroment}\n` +
-              `**Platform:** ${data.platform}` +
+              `**Platform:** ${data.platform}\n` +
               `**URL:** ${data.url}`
           }
         },
