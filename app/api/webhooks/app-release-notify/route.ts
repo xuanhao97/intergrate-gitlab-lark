@@ -76,7 +76,7 @@ function buildThirdPartyCardMessage(data: Required<NonNullable<ThirdPartyPayload
           `**Platform:** ${data.platform}\n` +
           `**Version:** ${data.version}\n` +
           `**Commit:** ${data.commit}\n` +
-          isUrlValid(data.url) ? `**URL:** ${data.url}` : ''
+          `**URL:** ${data.url}` 
       }
     }
   ] as any[]
